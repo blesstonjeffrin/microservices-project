@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "product-restapp")
+@FeignClient(name = "product-restapp", url = "${PRODUCT_SERVICE_URL}")
 public interface ProductClient {
 
     @PutMapping("/api/v1/products/{id}/discount")
