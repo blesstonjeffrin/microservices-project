@@ -1,0 +1,74 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+
+  "services": {
+    "naming": {
+      "root": "naming-servers/",
+      "runtime": "container",
+      "entrypoint": "Dockerfile.vercel"
+    },
+
+    "product": {
+      "root": "product-restapp/",
+      "runtime": "container",
+      "entrypoint": "Dockerfile.vercel",
+
+      "bindings": [
+        {
+          "type": "service",
+          "service": "naming",
+          "format": "url",
+          "env": "EUREKA_SERVICE_URL"
+        }
+      ]
+    },
+
+    "coupon": {
+      "root": "coupon-restapp/",
+      "runtime": "container",
+      "entrypoint": "Dockerfile.vercel",
+
+      "bindings": [
+        {
+          "type": "service",
+          "service": "naming",
+          "format": "url",
+          "env": "EUREKA_SERVICE_URL"
+        }
+      ]
+    }
+  },
+
+  "rewrites": [
+    {
+      "source": "/eureka/(.*)",
+      "destination": {
+        "service": "naming"
+      }
+    },
+    {
+      "source": "/api/v1/products/(.*)",
+      "destination": {
+        "service": "product"
+      }
+    },
+    {
+      "source": "/api/v1/products",
+      "destination": {
+        "service": "product"
+      }
+    },
+    {
+      "source": "/api/v1/coupons/(.*)",
+      "destination": {
+        "service": "coupon"
+      }
+    },
+    {
+      "source": "/api/v1/coupons",
+      "destination": {
+        "service": "coupon"
+      }
+    }
+  ]
+}

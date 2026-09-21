@@ -1,0 +1,38 @@
+services:
+
+  naming-servers:
+    image: naming-servers:1.0
+    container_name: naming-servers
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-network
+
+  product-restapp:
+    image: product-restapp:1.0
+    container_name: product-restapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - naming-servers
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-servers:8761/eureka/
+    networks:
+      - microservices-network
+
+  coupon-restapp:
+    image: coupon-restapp:1.0
+    container_name: coupon-restapp
+    ports:
+      - "8081:8081"
+    depends_on:
+      - naming-servers
+      - product-restapp
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-servers:8761/eureka/
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
